@@ -5,7 +5,8 @@ from bson.objectid import ObjectId
 # Підключення до MongoDB
 def connect_to_db():
     try:
-        client = MongoClient("mongodb+srv://vmpometun:91mifmx9qkClQKvC@cs.3g2qf.mongodb.net/?retryWrites=true&w=majority&appName=CS")  # Або MongoDB Atlas URI
+        # client = MongoClient("mongodb+srv://vmpometun:91mifmx9qkClQKvC@cs.3g2qf.mongodb.net/?retryWrites=true&w=majority&appName=CS") # MongoDB Atlas
+        client = MongoClient("mongodb://localhost:27017/") # Docker
         db = client['cat_database']  # Назва бази даних
         return db['cats']  # Назва колекції
     except Exception as e:
@@ -13,6 +14,8 @@ def connect_to_db():
         return None
 
 # CRUD Операції
+
+# Додати котика
 def create_cat(collection, name, age, features):
     try:
         cat = {"name": name, "age": age, "features": features}
@@ -21,6 +24,7 @@ def create_cat(collection, name, age, features):
     except Exception as e:
         print(f"Помилка створення запису: {e}")
 
+# Отримати всіх котиків
 def read_all_cats(collection):
     try:
         cats = collection.find()
@@ -29,6 +33,7 @@ def read_all_cats(collection):
     except Exception as e:
         print(f"Помилка читання даних: {e}")
 
+# Знайти котика за ім'ям
 def read_cat_by_name(collection, name):
     try:
         cat = collection.find_one({"name": name})
@@ -39,6 +44,7 @@ def read_cat_by_name(collection, name):
     except Exception as e:
         print(f"Помилка читання даних: {e}")
 
+# Оновити вік котика
 def update_cat_age(collection, name, new_age):
     try:
         result = collection.update_one({"name": name}, {"$set": {"age": new_age}})
@@ -49,6 +55,7 @@ def update_cat_age(collection, name, new_age):
     except Exception as e:
         print(f"Помилка оновлення даних: {e}")
 
+# Додати характеристику котику
 def add_feature_to_cat(collection, name, feature):
     try:
         result = collection.update_one({"name": name}, {"$push": {"features": feature}})
@@ -59,6 +66,7 @@ def add_feature_to_cat(collection, name, feature):
     except Exception as e:
         print(f"Помилка оновлення даних: {e}")
 
+# Видалити котика за ім'ям
 def delete_cat_by_name(collection, name):
     try:
         result = collection.delete_one({"name": name})
@@ -69,6 +77,7 @@ def delete_cat_by_name(collection, name):
     except Exception as e:
         print(f"Помилка видалення даних: {e}")
 
+# Видалити всіх котиків
 def delete_all_cats(collection):
     try:
         result = collection.delete_many({})
